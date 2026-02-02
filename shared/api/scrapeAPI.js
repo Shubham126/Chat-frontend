@@ -1,7 +1,6 @@
 const getApiBaseUrl = () => {
-    // Always use local backend IP for now
-    // Change this to your backend URL when deploying to production
-    const baseUrl = 'http://192.168.1.12:3000/api';
+    // Use Render backend for production
+    const baseUrl = 'https://chat-backend-12wo.onrender.com/api';
 
     console.log(`🔌 ScrapeAPI URL set to: ${baseUrl}`);
     return baseUrl;

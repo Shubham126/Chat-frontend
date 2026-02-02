@@ -201,7 +201,7 @@ const IntegrationsPage = {
             this.showLoading();
 
             // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/api-key';
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/api-key';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
@@ -231,7 +231,7 @@ const IntegrationsPage = {
             this.setButtonLoading('generate-api-key-btn', true);
 
             // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/api-key/generate';
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/api-key/generate';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
@@ -264,7 +264,7 @@ const IntegrationsPage = {
             this.setButtonLoading('regenerate-api-key-btn', true);
 
             // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/api-key/generate';
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/api-key/generate';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
@@ -297,7 +297,7 @@ const IntegrationsPage = {
             this.setButtonLoading('revoke-api-key-btn', true);
 
             // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/api-key';
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/api-key';
             const response = await fetch(url, {
                 method: 'DELETE',
                 credentials: 'include'
@@ -751,8 +751,8 @@ const IntegrationsPage = {
 
     async loadAvailableWebsites() {
         try {
-            // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/scrape/dashboard/files';
+            // Use Render backend
+            const url = 'https://chat-backend-12wo.onrender.com/api/scrape/dashboard/files';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'

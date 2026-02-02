@@ -1,7 +1,7 @@
 class AuthManager {
     constructor() {
-        // Use local backend IP
-        this.apiBase = 'http://192.168.1.12:3000/api/auth';
+        // Use Render backend
+        this.apiBase = 'https://chat-backend-12wo.onrender.com/api/auth';
 
         console.log('🔌 API Base set to:', this.apiBase);
         this.init();

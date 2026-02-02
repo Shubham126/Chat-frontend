@@ -193,8 +193,8 @@ const HeaderComponent = {
 
     async loadUserData() {
         try {
-            // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/profile';
+            // Use Render backend
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/profile';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
@@ -228,8 +228,8 @@ const HeaderComponent = {
 
     async handleLogout() {
         try {
-            // Use local backend IP
-            const url = 'http://192.168.1.12:3000/api/auth/logout';
+            // Use Render backend
+            const url = 'https://chat-backend-12wo.onrender.com/api/auth/logout';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
