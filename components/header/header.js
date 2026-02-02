@@ -193,10 +193,9 @@ const HeaderComponent = {
 
     async loadUserData() {
         try {
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/profile` : '/api/auth/profile';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/profile' : 'https://chat-backend-12wo.onrender.com/api/auth/profile';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
@@ -230,10 +229,9 @@ const HeaderComponent = {
 
     async handleLogout() {
         try {
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/logout` : '/api/auth/logout';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/logout' : 'https://chat-backend-12wo.onrender.com/api/auth/logout';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
