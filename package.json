@@ -1,0 +1,20 @@
+{
+    "name": "chatflow-ai-frontend",
+    "version": "1.0.0",
+    "description": "ChatFlow AI Frontend - Intelligent Website Analysis Dashboard",
+    "scripts": {
+        "start": "http-server -p 8080 -c-1 --cors -o",
+        "dev": "http-server -p 8080 -c-1 --cors"
+    },
+    "keywords": [
+        "chatflow",
+        "ai",
+        "frontend",
+        "dashboard"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "http-server": "^14.1.1"
+    }
+}

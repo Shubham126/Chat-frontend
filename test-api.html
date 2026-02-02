@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - ChatFlow AI</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #00ff00;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #00cc00;
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #00ff00;
+        }
+
+        .error {
+            border-left-color: #ff0000;
+            color: #ff6666;
+        }
+
+        .success {
+            border-left-color: #00ff00;
+        }
+
+        h1 {
+            color: #00ff00;
+        }
+
+        h2 {
+            color: #00cc00;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 ChatFlow AI - API Debug Test</h1>
+
+    <div class="test-section">
+        <h2>1. Environment Detection</h2>
+        <div id="env-info"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. API Base URL Test</h2>
+        <div id="api-base-info"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test API Endpoints</h2>
+        <button onclick="testAuthCheck()">Test /api/auth/check</button>
+        <button onclick="testRegister()">Test /api/auth/register</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. CORS Test</h2>
+        <button onclick="testCORS()">Test CORS Headers</button>
+        <div id="cors-results"></div>
+    </div>
+
+    <script>
+        // Display environment info
+        function displayEnvInfo() {
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiBase = isLocalhost ? 'http://localhost:3000/api/auth' : '/api/auth';
+
+            document.getElementById('env-info').innerHTML = `
+                <div class="result success">
+                    <strong>Hostname:</strong> ${window.location.hostname}<br>
+                    <strong>Port:</strong> ${window.location.port}<br>
+                    <strong>Full URL:</strong> ${window.location.href}<br>
+                    <strong>Is Localhost:</strong> ${isLocalhost}<br>
+                    <strong>Protocol:</strong> ${window.location.protocol}
+                </div>
+            `;
+
+            document.getElementById('api-base-info').innerHTML = `
+                <div class="result success">
+                    <strong>Detected API Base:</strong> ${apiBase}<br>
+                    <strong>Expected:</strong> http://localhost:3000/api/auth<br>
+                    <strong>Match:</strong> ${apiBase === 'http://localhost:3000/api/auth' ? '✅ YES' : '❌ NO'}
+                </div>
+            `;
+        }
+
+        // Test /api/auth/check endpoint
+        async function testAuthCheck() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="result">Testing /api/auth/check...</div>';
+
+            try {
+                const url = 'http://localhost:3000/api/auth/check';
+                console.log('Fetching:', url);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                resultsDiv.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ SUCCESS</strong><br>
+                        <strong>URL:</strong> ${url}<br>
+                        <strong>Status:</strong> ${response.status} ${response.statusText}<br>
+                        <strong>Response:</strong><br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ ERROR</strong><br>
+                        <strong>Message:</strong> ${error.message}<br>
+                        <strong>Error:</strong> ${error.toString()}
+                    </div>
+                `;
+                console.error('Test failed:', error);
+            }
+        }
+
+        // Test /api/auth/register endpoint
+        async function testRegister() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="result">Testing /api/auth/register...</div>';
+
+            try {
+                const url = 'http://localhost:3000/api/auth/register';
+                const testData = {
+                    name: 'Test User',
+                    email: 'test' + Date.now() + '@example.com',
+                    password: 'Test123',
+                    confirmPassword: 'Test123'
+                };
+
+                console.log('Fetching:', url);
+                console.log('Data:', testData);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(testData)
+                });
+
+                const data = await response.json();
+
+                resultsDiv.innerHTML = `
+                    <div class="result ${response.ok ? 'success' : 'error'}">
+                        <strong>${response.ok ? '✅ SUCCESS' : '⚠️ RESPONSE'}</strong><br>
+                        <strong>URL:</strong> ${url}<br>
+                        <strong>Status:</strong> ${response.status} ${response.statusText}<br>
+                        <strong>Response:</strong><br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        ${response.status === 201 ? '<br><strong>✅ User created successfully!</strong>' : ''}
+                        ${response.status === 409 ? '<br><strong>ℹ️ User already exists (this is normal)</strong>' : ''}
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ ERROR</strong><br>
+                        <strong>Message:</strong> ${error.message}<br>
+                        <strong>Error:</strong> ${error.toString()}
+                    </div>
+                `;
+                console.error('Test failed:', error);
+            }
+        }
+
+        // Test CORS
+        async function testCORS() {
+            const resultsDiv = document.getElementById('cors-results');
+            resultsDiv.innerHTML = '<div class="result">Testing CORS...</div>';
+
+            try {
+                const url = 'http://localhost:3000/api/auth/check';
+
+                const response = await fetch(url, {
+                    method: 'OPTIONS'
+                });
+
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+
+                resultsDiv.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ CORS Preflight Response</strong><br>
+                        <strong>Status:</strong> ${response.status}<br>
+                        <strong>Headers:</strong><br>
+                        <pre>${JSON.stringify(headers, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ CORS ERROR</strong><br>
+                        <strong>Message:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Run on page load
+        displayEnvInfo();
+
+        // Auto-test on load
+        setTimeout(() => {
+            console.log('Running auto-test...');
+            testAuthCheck();
+        }, 500);
+    </script>
+</body>
+
+</html>

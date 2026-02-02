@@ -1,0 +1,2862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ChatFlow AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+.dashboard-container {
+    width: 100%;
+    padding: 2rem;
+    min-height: calc(100vh - 70px);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Dashboard Layout - Flexible Split with Gap */
+.dashboard-layout {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+    min-height: 0;
+}
+
+.left-section {
+    flex: 0 0 calc(40% - 1rem);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.right-section {
+    flex: 0 0 calc(60% - 1rem);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Main Section - Combined URL Scrape and Websites */
+.main-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 560px;
+    height: 100%;
+    width: 100%;
+}
+
+/* Common section styles */
+.section-header {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    background: #f8fafc;
+    box-sizing: border-box;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.refresh-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+    background: #e5e7eb;
+    transform: rotate(180deg);
+}
+
+/* Scrape Area */
+.scrape-area {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    box-sizing: border-box;
+}
+
+.scrape-form {
+    width: 100%;
+    margin: 0;
+}
+
+.input-group {
+    width: 100%;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    position: relative;
+}
+
+.input-group input {
+    flex: 1;
+    min-width: 0; /* Prevents flex item from overflowing */
+    padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-group input:focus + .input-icon,
+.input-group input:not(:placeholder-shown) + .input-icon {
+    color: #667eea;
+}
+
+.scrape-button {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.scrape-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.scrape-button:hover::before {
+    left: 100%;
+}
+
+.scrape-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.scrape-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.scrape-button:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-loading {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-loading i {
+    animation: spin 1s linear infinite;
+}
+
+.scrape-button:disabled .btn-text {
+    opacity: 0.7;
+}
+
+/* Loading state animation */
+.scrape-button.loading {
+    pointer-events: none;
+}
+
+.scrape-button.loading .btn-text {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.scrape-button.loading .btn-loading {
+    display: inline-flex;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Pulse effect for loading */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+}
+
+.scrape-button.loading {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Success animation */
+@keyframes success-flash {
+    0% { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+}
+
+.scrape-button.success {
+    animation: success-flash 0.6s ease-in-out;
+}
+
+/* Success Notification */
+.success-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.success-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-content {
+    background: #10b981;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Websites Area */
+.websites-area {
+    width: 100%;
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.websites-list {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+}
+
+/* Enhanced Content Stats */
+.content-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Tablet landscape and smaller desktops */
+@media (max-width: 1024px) {
+    .content-stats {
+        gap: 0.8rem;
+    }
+}
+
+/* Tablet portrait and larger phones */
+@media (max-width: 768px) {
+    .content-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+/* Medium phones */
+@media (max-width: 600px) {
+    .content-stats {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .content-stats {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem;
+    }
+    
+    .stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 0.25rem;
+    word-break: break-word;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    word-break: break-word;
+}
+
+/* Responsive stat card adjustments */
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 0.9rem;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .stat-card {
+        padding: 0.8rem;
+    }
+    
+    .stat-number {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-card {
+        padding: 0.75rem;
+    }
+    
+    .stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* History Item States */
+.history-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.history-item:hover {
+    background: #f0f9ff;
+    border-color: #bfdbfe;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.history-item.expanded {
+    background: #f0f9ff;
+    border-color: #667eea;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 0;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+/* Expandable Details Section */
+.item-details {
+    background: white;
+    border: 1px solid #667eea;
+    border-top: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.item-details.open {
+    max-height: none;
+    height: auto;
+    opacity: 1;
+}
+
+.details-content {
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .details-content {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .details-content {
+        padding: 0.75rem;
+    }
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.details-header h4 {
+    margin: 0;
+    color: #667eea;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.close-details-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.close-details-btn:hover {
+    background: #fecaca;
+    transform: scale(1.05);
+}
+
+.details-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #374151;
+    min-width: 80px;
+    font-size: 0.9rem;
+}
+
+.detail-value {
+    flex: 1;
+    color: #1f2937;
+    font-size: 0.9rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.detail-value a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.detail-value a:hover {
+    text-decoration: underline;
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0; /* Prevents flex item from overflowing */
+    margin-right: 1rem;
+}
+
+.file-display-name {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-display-name strong {
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.history-url {
+    width: 100%;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-url a {
+    color: #667eea;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.history-url a:hover {
+    text-decoration: underline;
+}
+
+.file-meta {
+    width: 100%;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.history-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.history-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-btn:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+}
+
+.view-btn:hover {
+    background: #dbeafe;
+    border-color: #60a5fa;
+}
+
+.delete-btn:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #6b7280;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    border: 2px dashed #cbd5e1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-state::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.empty-state-content {
+    position: relative;
+    z-index: 2;
+    max-width: 350px;
+}
+
+.empty-state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-state-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.empty-state-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.empty-state-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.empty-state-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.2s ease;
+}
+
+.empty-state-step:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+}
+
+.empty-state-step-icon {
+    font-size: 1rem;
+    color: #667eea;
+    flex-shrink: 0;
+}
+
+.empty-state-step-text {
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+/* Legacy empty state for backward compatibility */
+.empty-state h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.empty-state p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+/* Chat Section */
+.chat-section-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 560px;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-header {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f8fafc;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Select Area (Chat Section) */
+.select-area {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.website-select-form {
+    width: 100%;
+    margin: 0;
+}
+
+.select-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.website-selector {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: white;
+    color: #1e293b;
+    box-sizing: border-box;
+}
+
+.website-selector:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.website-selector option {
+    padding: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Chat Container */
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Chat Messages Area */
+.chat-messages {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fafafa;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.welcome-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #6b7280;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    border: 2px dashed #cbd5e1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-message::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.welcome-message-content {
+    position: relative;
+    z-index: 2;
+    max-width: 350px;
+}
+
+.welcome-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+    animation: float 3s ease-in-out infinite;
+}
+
+.welcome-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.welcome-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.welcome-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.welcome-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.2s ease;
+}
+
+.welcome-step:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+}
+
+.welcome-step-icon {
+    font-size: 1rem;
+    color: #667eea;
+    flex-shrink: 0;
+}
+
+.welcome-step-text {
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.welcome-message p {
+    margin: 0.5rem 0;
+    word-wrap: break-word;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.message {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    max-width: 85%;
+    width: fit-content;
+    box-sizing: border-box;
+}
+
+.message.user {
+    flex-direction: row-reverse;
+    margin-left: auto;
+}
+
+.message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+    background: #667eea;
+}
+
+.message.bot .message-avatar {
+    background: #10b981;
+}
+
+.message-content {
+    flex: 1;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.message-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.message.user .message-bubble {
+    background: #667eea;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.bot .message-bubble {
+    background: white;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+    border-bottom-left-radius: 4px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.25rem;
+    word-wrap: break-word;
+}
+
+.message.user .message-time {
+    text-align: right;
+}
+
+/* Chat Input Area */
+.chat-input-container {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    background: white;
+    color: #374151;
+    height: 40px;
+}
+
+.chat-form input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.chat-form input:disabled {
+    background: #f9fafb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    border-color: #d1d5db;
+}
+
+.chat-form input::placeholder {
+    color: #9ca3af;
+    transition: color 0.3s ease;
+}
+
+.chat-form input:focus::placeholder {
+    color: #6b7280;
+}
+
+.send-btn {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.send-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.send-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.send-btn i {
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.send-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a67d8 0%, #6a4f9a 100%);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+.send-btn:hover:not(:disabled) i {
+    transform: translateX(2px) scale(1.1);
+}
+
+.send-btn:active:not(:disabled) {
+    transform: translateY(0) scale(1.02);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.send-btn:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.send-btn:disabled::before {
+    display: none;
+}
+
+.send-btn:disabled i {
+    opacity: 0.7;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    border-bottom-left-radius: 4px;
+    color: #6b7280;
+    font-style: italic;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.typing-dot {
+    width: 4px;
+    height: 4px;
+    background: #9ca3af;
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-container {
+        padding: 1.5rem;
+        min-height: calc(100vh - 70px);
+    }
+
+    .dashboard-layout {
+        gap: 1.5rem;
+    }
+
+    .left-section {
+        flex: 0 0 calc(40% - 0.75rem);
+    }
+
+    .right-section {
+        flex: 0 0 calc(60% - 0.75rem);
+    }
+
+    /* Maintain flexible heights */
+    .main-section,
+    .chat-section-container {
+        min-height: 560px;
+        height: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 1rem;
+        min-height: calc(100vh - 70px);
+    }
+
+    .dashboard-layout {
+        gap: 1rem;
+    }
+
+    .left-section {
+        flex: 0 0 calc(40% - 0.5rem);
+    }
+
+    .right-section {
+        flex: 0 0 calc(60% - 0.5rem);
+    }
+
+    .section-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .scrape-area {
+        padding: 0.75rem 1rem;
+    }
+
+    .websites-list {
+        padding: 1rem;
+    }
+
+    .history-item {
+        padding: 0.75rem;
+    }
+
+    .chat-header,
+    .select-area,
+    .chat-input-container {
+        padding: 0.75rem 1rem;
+    }
+
+    .chat-messages {
+        padding: 1rem;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    /* Maintain flexible heights */
+    .main-section,
+    .chat-section-container {
+        min-height: 560px;
+        height: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        min-height: calc(100vh - 70px);
+    }
+
+    .dashboard-layout {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .left-section,
+    .right-section {
+        flex: 1;
+        width: 100%;
+    }
+
+    /* Sections stack and share available height */
+    .main-section,
+    .chat-section-container {
+        min-height: 400px;
+        height: auto;
+        flex: 1;
+    }
+
+    .input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    }
+
+    .input-icon {
+        left: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .scrape-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .history-item {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .history-info {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .history-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .file-display-name,
+    .history-url,
+    .file-meta {
+        max-width: 100%;
+    }
+
+    .select-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .website-selector {
+        width: 100%;
+    }
+
+    .message {
+        max-width: 95%;
+    }
+
+    .message-bubble {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0.75rem;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Maintain stacked layout with flexible heights */
+    .main-section,
+    .chat-section-container {
+        min-height: 350px;
+        height: auto;
+        flex: 1;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .scrape-area {
+        padding: 0.75rem;
+    }
+
+    .websites-list {
+        padding: 0.75rem;
+    }
+
+    .history-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .file-display-name strong {
+        font-size: 0.95rem;
+    }
+
+    .history-url {
+        font-size: 0.85rem;
+    }
+
+    .file-meta {
+        font-size: 0.75rem;
+    }
+
+    .history-actions {
+        gap: 0.35rem;
+    }
+
+    .history-btn {
+        padding: 0.35rem;
+        min-width: 28px;
+        height: 28px;
+    }
+
+    .history-btn i {
+        font-size: 1rem;
+    }
+
+    .chat-header,
+    .select-area,
+    .chat-input-container {
+        padding: 0.75rem;
+    }
+
+    .chat-messages {
+        padding: 0.75rem;
+    }
+
+    .message {
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .message-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+
+    .message-bubble {
+        font-size: 0.9rem;
+    }
+
+    .message-time {
+        font-size: 0.7rem;
+    }
+
+    .chat-form {
+        gap: 0.5rem;
+    }
+
+    .chat-form input {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .send-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .send-btn i {
+        font-size: 0.9rem;
+    }
+
+    .welcome-message {
+        padding: 1rem;
+        height: 100%;
+        min-height: 0;
+        flex: 1;
+    }
+
+    .welcome-message p {
+        font-size: 0.9rem;
+        margin: 0.35rem 0;
+    }
+
+    .welcome-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .welcome-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .welcome-steps {
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    .welcome-step {
+        padding: 0.4rem 0.6rem;
+        gap: 0.4rem;
+    }
+
+    .welcome-step-icon {
+        font-size: 0.9rem;
+    }
+
+    .welcome-step-text {
+        font-size: 0.8rem;
+    }
+
+    /* Empty state mobile styles */
+    .empty-state {
+        padding: 1rem;
+        height: 100%;
+        min-height: 0;
+        flex: 1;
+    }
+
+    .empty-state-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .empty-state-steps {
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    .empty-state-step {
+        padding: 0.4rem 0.6rem;
+        gap: 0.4rem;
+    }
+
+    .empty-state-step-icon {
+        font-size: 0.9rem;
+    }
+
+    .empty-state-step-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Icon Styles */
+
+
+/* Add icon spacing */
+h2 i, h3 i, h4 i {
+    margin-right: 0.5rem;
+    color: #667eea;
+}
+
+.btn-text i {
+    margin-right: 0.25rem;
+}
+
+/* Stat card icon */
+.stat-icon {
+    font-size: 1.5rem;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.stat-icon i {
+    opacity: 0.8;
+}
+
+/* Message avatar icons */
+.message-avatar i {
+    font-size: 1.2rem;
+}
+
+/* Action button icons */
+.history-btn i {
+    font-size: 1.1rem;
+}
+
+.send-btn i {
+    font-size: 1.2rem;
+}
+
+/* Detail labels */
+.detail-label i {
+    margin-right: 0.25rem;
+    color: #667eea;
+}
+
+/* File meta icons */
+.file-meta i {
+    font-size: 0.9rem;
+    margin-right: 0.25rem;
+    color: #6b7280;
+}
+
+/* Empty state icon */
+.empty-state i {
+    font-size: 2rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+} 
+    </style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ChatFlow AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            width: 100%;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Dashboard Layout - Flexible Split with Gap */
+        .dashboard-layout {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .left-section {
+            flex: 0 0 calc(40% - 1rem);
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .right-section {
+            flex: 0 0 calc(60% - 1rem);
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* Main Section - Combined URL Scrape and Websites */
+        .main-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 60vh;
+            max-height: 85vh;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Common section styles */
+        .section-header {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #e5e7eb;
+            transform: rotate(180deg);
+        }
+
+        /* Scrape Area */
+        .scrape-area {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            box-sizing: border-box;
+        }
+
+        .scrape-form {
+            width: 100%;
+            margin: 0;
+        }
+
+        .input-group {
+            width: 100%;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 0; /* Prevents flex item from overflowing */
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .input-group input:focus + .input-icon,
+        .input-group input:not(:placeholder-shown) + .input-icon {
+            color: #667eea;
+        }
+
+        .scrape-button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .scrape-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .scrape-button:hover::before {
+            left: 100%;
+        }
+
+        .scrape-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .scrape-button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .scrape-button:disabled {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-loading {
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        .scrape-button:disabled .btn-text {
+            opacity: 0.7;
+        }
+
+        /* Loading state animation */
+        .scrape-button.loading {
+            pointer-events: none;
+        }
+
+        .scrape-button.loading .btn-text {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .scrape-button.loading .btn-loading {
+            display: inline-flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Pulse effect for loading */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+        }
+
+        .scrape-button.loading {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Success animation */
+        @keyframes success-flash {
+            0% { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+            100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        }
+
+        .scrape-button.success {
+            animation: success-flash 0.6s ease-in-out;
+        }
+
+        /* Success Notification */
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .success-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification-content {
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Websites Area */
+        .websites-area {
+            width: 100%;
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+            min-height: 0; /* Important for flex shrinking */
+        }
+
+        .websites-list {
+            width: 100%;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 1rem 1.5rem;
+            box-sizing: border-box;
+            max-height: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .websites-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .websites-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .websites-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+
+        .websites-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Enhanced Content Stats */
+        .content-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        /* Tablet landscape and smaller desktops */
+        @media (max-width: 1024px) {
+            .content-stats {
+                gap: 0.8rem;
+            }
+        }
+
+        /* Tablet portrait and larger phones */
+        @media (max-width: 768px) {
+            .content-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+
+        /* Medium phones */
+        @media (max-width: 600px) {
+            .content-stats {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .content-stats {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.25rem;
+            word-break: break-word;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            word-break: break-word;
+        }
+
+        /* Responsive stat card adjustments */
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 0.9rem;
+            }
+            
+            .stat-number {
+                font-size: 1.4rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stat-card {
+                padding: 0.8rem;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-card {
+                padding: 0.75rem;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            
+            .stat-label {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Continue with remaining CSS... */
+        /* Due to length constraints, I'll continue this in chunks */
+    </style>
+</head>
+<body>
+    <!-- Dashboard HTML content here -->
+    <div class="dashboard-container">
+        <!-- Dashboard content will be inserted here by JavaScript -->
+    </div>
+
+    <script>
+        // Dashboard JavaScript will be embedded here
+        console.log('Dashboard standalone HTML loaded');
+    </script>
+</body>
+</html> 
+
+    <script>
+const DashboardPage = {
+    async init() {
+        const container = document.getElementById('dashboard-page');
+        
+        try {
+            const response = await fetch('pages/dashboard/dashboard.html');
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            // Show empty state immediately
+            this.showEmptyState();
+            
+            this.bindEvents();
+            this.loadHistory();
+            
+            // Listen for state changes
+            DashboardState.addListener(this.handleStateChange.bind(this));
+        } catch (error) {
+            console.error('Error loading dashboard page:', error);
+            container.innerHTML = '<div class="error">Failed to load dashboard</div>';
+        }
+    },
+
+    showEmptyState() {
+        const historyContent = document.getElementById('history-content');
+        if (historyContent) {
+            historyContent.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-content">
+                        <div class="empty-state-icon">ðŸ“</div>
+                        <div class="empty-state-title">No Scraped Websites</div>
+                        <div class="empty-state-subtitle">Get started by scraping your first website above</div>
+                        <div class="empty-state-steps">
+                            <div class="empty-state-step">
+                                <div class="empty-state-step-icon">ðŸŒ</div>
+                                <div class="empty-state-step-text">Enter any website URL above</div>
+                            </div>
+                            <div class="empty-state-step">
+                                <div class="empty-state-step-icon">ðŸš€</div>
+                                <div class="empty-state-step-text">Click "Scrape" to analyze the content</div>
+                            </div>
+                            <div class="empty-state-step">
+                                <div class="empty-state-step-icon">ðŸ’¬</div>
+                                <div class="empty-state-step-text">Start chatting about the website</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    },
+
+    bindEvents() {
+        const scrapeBtn = document.getElementById('scrape-btn');
+        const refreshBtn = document.getElementById('refresh-history');
+        const urlInput = document.getElementById('url-input');
+        const scrapeForm = document.getElementById('scrape-form');
+
+        // Chat-related elements
+        const openChatBtn = document.getElementById('open-chat');
+        const closeChatBtn = document.getElementById('close-chat');
+        const websiteSelector = document.getElementById('website-selector');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+
+        // Prevent form submission
+        if (scrapeForm) {
+            scrapeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleScrape(e);
+            });
+        }
+
+        if (scrapeBtn) {
+            scrapeBtn.addEventListener('click', this.handleScrape.bind(this));
+        }
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', this.loadHistory.bind(this));
+        }
+
+        // Allow Enter key to submit
+        if (urlInput) {
+            urlInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.handleScrape(e);
+                }
+            });
+        }
+
+        // Chat event handlers - removed toggle functionality since chat is always visible
+        if (websiteSelector) {
+            websiteSelector.addEventListener('change', this.onWebsiteSelect.bind(this));
+        }
+
+        if (chatForm) {
+            chatForm.addEventListener('submit', this.handleChatMessage.bind(this));
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.handleChatMessage(e);
+                }
+            });
+        }
+    },
+
+    async handleScrape(event) {
+        // Prevent any form submission behavior
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const urlInput = document.getElementById('url-input');
+        const scrapeBtn = document.getElementById('scrape-btn');
+        
+        if (!urlInput || !scrapeBtn) return;
+
+        const url = urlInput.value.trim();
+
+        if (!url) {
+            alert('Please enter a URL');
+            return;
+        }
+
+        try {
+            // Disable input and add loading animation
+            urlInput.disabled = true;
+            scrapeBtn.disabled = true;
+            scrapeBtn.classList.add('loading');
+            DashboardState.setLoading(true);
+            
+            const result = await ScrapeAPI.scrapeAndSave(url);
+            
+            // Remove loading and add success animation
+            scrapeBtn.classList.remove('loading');
+            scrapeBtn.classList.add('success');
+            
+            // Just refresh the history list - no need to show results
+            await this.loadHistory();
+            
+            // Clear form
+            urlInput.value = '';
+
+            // Show success message briefly
+            this.showSuccessMessage('Website scraped successfully!');
+
+            // Remove success class after animation
+            setTimeout(() => {
+                scrapeBtn.classList.remove('success');
+            }, 600);
+
+        } catch (error) {
+            console.error('Scrape error:', error);
+            
+            // Remove loading state and show error
+            scrapeBtn.classList.remove('loading');
+            
+            DashboardState.setError(error);
+        } finally {
+            // Ensure loading state is cleared regardless of success or failure
+            urlInput.disabled = false;
+            scrapeBtn.disabled = false;
+            DashboardState.setLoading(false);
+        }
+    },
+
+    async loadHistory() {
+        try {
+            const result = await ScrapeAPI.getFilesList();
+            const historyData = result.data || [];
+            
+            // Update state immediately with the loaded data
+            DashboardState.setHistory(historyData);
+            
+            // Update UI immediately
+            this.updateHistory(historyData);
+            this.updateWebsiteSelector(historyData);
+        } catch (error) {
+            console.error('Error loading files list:', error);
+            // Keep empty state on error
+        }
+    },
+
+    async deleteFile(id) {
+        try {
+            if (confirm('Are you sure you want to delete this file? This action cannot be undone.')) {
+                await ScrapeAPI.deleteFile(id);
+                this.loadHistory(); // Refresh files list
+            }
+        } catch (error) {
+            console.error('Error deleting file:', error);
+            alert('Failed to delete file');
+        }
+    },
+
+
+
+    async viewFileContent(id) {
+        try {
+            const historyItem = document.querySelector(`[data-id="${id}"]`);
+            if (!historyItem) return;
+            
+            const existingDetails = historyItem.nextElementSibling;
+            
+            // Check if details are already open for this specific item
+            if (existingDetails && existingDetails.classList.contains('item-details')) {
+                // Close the details if they're already open for this item
+                this.closeDetails(id);
+                return;
+            }
+            
+            // Close any other open details first (but not this one)
+            this.closeAllDetails(id);
+            
+            // Prevent multiple API calls by checking if already loading
+            const viewBtn = historyItem.querySelector('.view-btn');
+            if (viewBtn && viewBtn.classList.contains('loading')) {
+                return;
+            }
+            
+            // Add loading state to button
+            if (viewBtn) {
+                viewBtn.classList.add('loading');
+                viewBtn.style.opacity = '0.6';
+                viewBtn.style.pointerEvents = 'none';
+            }
+            
+            try {
+                const result = await ScrapeAPI.getFileContent(id);
+                this.showDetailsBelow(id, result.data);
+            } finally {
+                // Remove loading state
+                if (viewBtn) {
+                    viewBtn.classList.remove('loading');
+                    viewBtn.style.opacity = '';
+                    viewBtn.style.pointerEvents = '';
+                }
+            }
+            
+        } catch (error) {
+            console.error('Error loading file content:', error);
+            alert('Failed to load file content');
+        }
+    },
+
+    closeAllDetails(exceptId = null) {
+        const existingDetails = document.querySelectorAll('.item-details');
+        existingDetails.forEach(detail => {
+            // Find the associated history item
+            const historyItem = detail.previousElementSibling;
+            const itemId = historyItem?.getAttribute('data-id');
+            
+            // Skip if this is the item we want to keep open
+            if (exceptId && itemId === exceptId) {
+                return;
+            }
+            
+            // Close this detail
+            detail.classList.remove('open');
+            if (historyItem) {
+                historyItem.classList.remove('expanded');
+                
+                // Reset eye button appearance
+                const viewBtn = historyItem.querySelector('.view-btn');
+                if (viewBtn) {
+                    viewBtn.style.background = '';
+                    viewBtn.style.color = '';
+                    viewBtn.style.borderColor = '';
+                    viewBtn.title = 'View Content';
+                }
+            }
+            
+            // Remove the detail element after animation
+            setTimeout(() => {
+                if (detail.parentNode) {
+                    detail.remove();
+                }
+            }, 300);
+        });
+    },
+
+    showDetailsBelow(itemId, fileData) {
+        const historyItem = document.querySelector(`[data-id="${itemId}"]`);
+        if (!historyItem) return;
+
+        // Check if details already exist for this item (safety check)
+        const existingDetails = historyItem.nextElementSibling;
+        if (existingDetails && existingDetails.classList.contains('item-details')) {
+            return; // Don't create duplicate details
+        }
+
+        // Add expanded class to the clicked item
+        historyItem.classList.add('expanded');
+        
+        // Update the eye button to show it's active
+        const viewBtn = historyItem.querySelector('.view-btn');
+        if (viewBtn) {
+            viewBtn.style.background = '#667eea';
+            viewBtn.style.color = 'white';
+            viewBtn.style.borderColor = '#667eea';
+            viewBtn.title = 'Hide Details';
+        }
+
+        // Create details element
+        const detailsElement = document.createElement('div');
+        detailsElement.className = 'item-details';
+        detailsElement.innerHTML = `
+            <div class="details-content">
+                <div class="details-body">
+                    <div class="detail-section">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="ri-link-m"></i> URL:</span>
+                            <span class="detail-value">
+                                <a href="${fileData.scrapedData.url}" target="_blank">${fileData.scrapedData.url}</a>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="ri-text"></i> Title:</span>
+                            <span class="detail-value">${fileData.scrapedData.title || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="ri-save-line"></i> Saved:</span>
+                            <span class="detail-value">${new Date(fileData.savedAt).toLocaleString()}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="content-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="ri-h-1"></i></div>
+                            <div class="stat-number">${fileData.scrapedData.headings ? fileData.scrapedData.headings.length : 0}</div>
+                            <div class="stat-label">Headings</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="ri-text-wrap"></i></div>
+                            <div class="stat-number">${fileData.scrapedData.paragraphs ? fileData.scrapedData.paragraphs.length : 0}</div>
+                            <div class="stat-label">Paragraphs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="ri-links-line"></i></div>
+                            <div class="stat-number">${fileData.scrapedData.links ? fileData.scrapedData.links.length : 0}</div>
+                            <div class="stat-label">Links</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Insert after the history item
+        historyItem.insertAdjacentElement('afterend', detailsElement);
+
+        // Animate the details opening
+        setTimeout(() => {
+            detailsElement.classList.add('open');
+        }, 10);
+
+        // Scroll to show the details
+        setTimeout(() => {
+            detailsElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+    },
+
+    closeDetails(itemId) {
+        const historyItem = document.querySelector(`[data-id="${itemId}"]`);
+        const detailsElement = historyItem?.nextElementSibling;
+        
+        if (detailsElement && detailsElement.classList.contains('item-details')) {
+            detailsElement.classList.remove('open');
+            historyItem.classList.remove('expanded');
+            
+            // Reset the eye button appearance
+            const viewBtn = historyItem.querySelector('.view-btn');
+            if (viewBtn) {
+                viewBtn.style.background = '';
+                viewBtn.style.color = '';
+                viewBtn.style.borderColor = '';
+                viewBtn.title = 'View Content';
+            }
+            
+            setTimeout(() => {
+                detailsElement.remove();
+            }, 300);
+        }
+    },
+
+    // Legacy method for backward compatibility
+    async deleteHistoryItem(id) {
+        return this.deleteFile(id);
+    },
+
+    handleStateChange(state) {
+        this.updateUI(state);
+    },
+
+    updateUI(state) {
+        this.updateLoadingState(state.isLoading);
+        this.updateHistory(state.history);
+        this.updateError(state.error);
+    },
+
+    updateLoadingState(isLoading) {
+        const scrapeBtn = document.getElementById('scrape-btn');
+        const btnText = document.querySelector('.btn-text');
+        const btnLoading = document.querySelector('.btn-loading');
+
+        if (scrapeBtn && btnText && btnLoading) {
+            scrapeBtn.disabled = isLoading;
+            
+            if (isLoading) {
+                scrapeBtn.classList.add('loading');
+            } else {
+                scrapeBtn.classList.remove('loading');
+            }
+            
+            // Legacy support for direct style changes
+            btnText.style.display = isLoading ? 'none' : 'inline';
+            btnLoading.style.display = isLoading ? 'inline' : 'none';
+        }
+    },
+
+    updateHistory(history) {
+        const historyContent = document.getElementById('history-content');
+        
+        if (!historyContent) return;
+
+        // If we have history, show it immediately
+        if (history && history.length > 0) {
+            historyContent.innerHTML = history.map(item => `
+                <div class="history-item" data-id="${item.id}">
+                    <div class="history-info">
+                        <div class="file-display-name">
+                            <strong><i class="ri-file-text-line"></i> ${item.displayName}</strong>
+                        </div>
+                        <div class="history-url">
+                            <a href="${item.url}" target="_blank"><i class="ri-link"></i> ${item.url}</a>
+                        </div>
+                        <div class="file-meta">
+                            <span class="file-size"><i class="ri-hard-drive-2-line"></i> ${item.fileSize}</span> â€¢ 
+                            <span class="save-time"><i class="ri-time-line"></i> ${this.formatTime(item.savedAt)}</span>
+                        </div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="history-btn view-btn" onclick="DashboardPage.viewFileContent('${item.id}')" title="View Content">
+                            <i class="ri-eye-line"></i>
+                        </button>
+                        <button class="history-btn delete-btn" onclick="DashboardPage.deleteFile('${item.id}')" title="Delete">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        // If no history and empty state not already shown, show it
+        else if (!historyContent.querySelector('.empty-state')) {
+            this.showEmptyState();
+        }
+    },
+
+    updateError(error) {
+        if (error) {
+            alert(`Error: ${error}`);
+            DashboardState.clearError();
+        }
+    },
+
+    formatTime(timestamp) {
+        if (!timestamp) return 'Unknown';
+        
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        
+        return date.toLocaleDateString();
+    },
+
+    refresh() {
+        this.loadHistory();
+    },
+
+    updateWebsiteSelector(files) {
+        const websiteSelector = document.getElementById('website-selector');
+        if (!websiteSelector) return;
+
+        // Clear existing options
+        websiteSelector.innerHTML = '<option value="">Select a scraped website...</option>';
+
+        // Add options for each file
+        files.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file.id;
+            
+            // Create a meaningful display name
+            let displayName = file.displayName || file.fileName;
+            if (file.scrapedData && file.scrapedData.title) {
+                displayName = file.scrapedData.title;
+                if (displayName.length > 50) {
+                    displayName = displayName.substring(0, 50) + '...';
+                }
+            }
+            
+            option.textContent = displayName;
+            websiteSelector.appendChild(option);
+        });
+    },
+
+    // Chat functionality - simplified since chat is always visible
+    onWebsiteSelect(event) {
+        const fileId = event.target.value;
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+
+        this.selectedFileId = fileId;
+
+        if (fileId) {
+            // Enable chat input
+            if (chatInput) {
+                chatInput.disabled = false;
+                chatInput.focus();
+            }
+            if (sendBtn) {
+                sendBtn.disabled = false;
+            }
+
+            // Clear previous messages and show welcome
+            if (chatMessages) {
+                const selectedFile = DashboardState.data.history.find(f => f.id === fileId);
+                const websiteTitle = selectedFile?.scrapedData?.title || 'the selected website';
+                
+                chatMessages.innerHTML = `
+                    <div class="welcome-message">
+                        <div class="welcome-message-content">
+                            <div class="welcome-icon">ðŸ¤–</div>
+                            <div class="welcome-title">Ready to Chat!</div>
+                            <div class="welcome-subtitle">I'm ready to discuss <strong>${websiteTitle}</strong> with you.</div>
+                            <div class="welcome-steps">
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">ðŸ’¡</div>
+                                    <div class="welcome-step-text">Ask me to summarize the content</div>
+                                </div>
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">ðŸ”</div>
+                                    <div class="welcome-step-text">Find specific information or details</div>
+                                </div>
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">â“</div>
+                                    <div class="welcome-step-text">Answer questions about the website</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        } else {
+            // Disable chat input
+            if (chatInput) {
+                chatInput.disabled = true;
+                chatInput.value = '';
+            }
+            if (sendBtn) {
+                sendBtn.disabled = true;
+            }
+
+            // Reset welcome message
+            if (chatMessages) {
+                chatMessages.innerHTML = `
+                    <div class="welcome-message">
+                        <div class="welcome-message-content">
+                            <div class="welcome-icon">ðŸ‘‹</div>
+                            <div class="welcome-title">Welcome to ChatFlow AI</div>
+                            <div class="welcome-subtitle">Your intelligent website analysis companion</div>
+                            <div class="welcome-steps">
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">1ï¸âƒ£</div>
+                                    <div class="welcome-step-text">First, scrape a website using the URL input</div>
+                                </div>
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">2ï¸âƒ£</div>
+                                    <div class="welcome-step-text">Select the scraped website from the dropdown</div>
+                                </div>
+                                <div class="welcome-step">
+                                    <div class="welcome-step-icon">3ï¸âƒ£</div>
+                                    <div class="welcome-step-text">Start chatting and ask me anything!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    },
+
+    async handleChatMessage(event) {
+        event.preventDefault();
+        
+        const chatInput = document.getElementById('chat-input');
+        const message = chatInput.value.trim();
+
+        if (!message || !this.selectedFileId) return;
+
+        // Clear input immediately
+        chatInput.value = '';
+
+        // Add user message to chat
+        this.addMessageToChat('user', message);
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+
+        try {
+            // Send message to API
+            const response = await ScrapeAPI.chatWithWebsite(this.selectedFileId, message);
+            
+            // Remove typing indicator
+            this.hideTypingIndicator();
+            
+            // Add bot response to chat
+            this.addMessageToChat('bot', response.data.response);
+
+        } catch (error) {
+            console.error('Chat error:', error);
+            
+            // Remove typing indicator
+            this.hideTypingIndicator();
+            
+            // Show error message
+            this.addMessageToChat('bot', `Sorry, I encountered an error: ${error.message}. Please try again.`);
+        }
+    },
+
+    addMessageToChat(sender, message) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+
+        // Remove welcome message if it exists
+        const welcomeMessage = chatMessages.querySelector('.welcome-message');
+        if (welcomeMessage) {
+            welcomeMessage.remove();
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                ${sender === 'user' ? '<i class="ri-user-line"></i>' : '<i class="ri-robot-2-line"></i>'}
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">${message}</div>
+                <div class="message-time"><i class="ri-time-line"></i> ${timeString}</div>
+            </div>
+        `;
+
+        chatMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    },
+
+    showTypingIndicator() {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message bot typing-message';
+        typingDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="ri-robot-2-line"></i>
+            </div>
+            <div class="message-content">
+                <div class="typing-indicator">
+                    <span>AI is thinking</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    },
+
+    hideTypingIndicator() {
+        const typingMessage = document.querySelector('.typing-message');
+        if (typingMessage) {
+            typingMessage.remove();
+        }
+    },
+
+    showSuccessMessage(message) {
+        // Create a temporary success notification
+        const notification = document.createElement('div');
+        notification.className = 'success-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="ri-checkbox-circle-line"></i> ${message}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Show the notification
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+}; 
+    </script>
+</body>
+</html>

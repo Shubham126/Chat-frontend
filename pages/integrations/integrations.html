@@ -1,0 +1,423 @@
+<div class="integrations-container">
+    <!-- API Key Management Section -->
+    <div class="integration-section">
+        <div class="section-header">
+            <h2><i class="ri-key-2-line"></i> API Key Management</h2>
+        </div>
+        
+        <div class="api-key-area">
+            <div class="api-key-status" id="api-key-status">
+                <div class="loading-spinner" id="api-key-loading">
+                    <i class="ri-loader-4-line"></i>
+                    <span>Loading API key...</span>
+                </div>
+                
+                <div class="no-api-key" id="no-api-key" style="display: none;">
+                    <div class="api-key-display">
+                        <div class="api-key-header">
+                            <label>Your API Key:</label>
+                            <div class="api-key-header-actions">
+                                <button class="btn btn-primary btn-mini" id="generate-api-key-btn">
+                                    <i class="ri-add-line"></i>
+                                    Generate
+                                </button>
+                            </div>
+                        </div>
+                        <div class="api-key-input-group">
+                            <input type="password" id="api-key-value-empty" placeholder="No API key generated" readonly disabled>
+                            <button class="btn btn-icon" id="toggle-api-key-visibility-empty" title="Show/Hide API Key" disabled>
+                                <i class="ri-eye-line"></i>
+                            </button>
+                            <button class="btn btn-icon" id="copy-api-key-empty" title="Copy API Key" disabled>
+                                <i class="ri-file-copy-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="has-api-key" id="has-api-key" style="display: none;">
+                    <div class="api-key-display">
+                        <div class="api-key-header">
+                            <label>Your API Key:</label>
+                            <div class="api-key-header-actions">
+                                <button class="btn btn-secondary btn-mini" id="regenerate-api-key-btn">
+                                    <i class="ri-refresh-line"></i>
+                                    Regenerate
+                                </button>
+                                <button class="btn btn-danger btn-mini" id="revoke-api-key-btn">
+                                    <i class="ri-delete-bin-line"></i>
+                                    Revoke
+                                </button>
+                            </div>
+                        </div>
+                        <div class="api-key-input-group">
+                            <input type="password" id="api-key-value" readonly>
+                            <button class="btn btn-icon" id="toggle-api-key-visibility" title="Show/Hide API Key">
+                                <i class="ri-eye-line"></i>
+                            </button>
+                            <button class="btn btn-icon" id="copy-api-key" title="Copy API Key">
+                                <i class="ri-file-copy-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Website Configuration Section -->
+    <div class="integration-section">
+        <div class="section-header">
+            <h2><i class="ri-global-line"></i> Website Configuration</h2>
+        </div>
+        
+        <div class="website-config-area">
+            <div class="website-selection">
+                <label for="website-selector-integration">Select Scraped Website:</label>
+                <div class="select-group">
+                    <select id="website-selector-integration" class="website-selector">
+                        <option value="">Loading websites...</option>
+                    </select>
+                    <button class="btn btn-primary" id="apply-website-config">
+                        <i class="ri-check-line"></i>
+                        Apply
+                    </button>
+                </div>
+            </div>
+
+            <div class="theme-selection" id="theme-selection-area" style="display: none;">
+                <div class="theme-header">
+                    <h3><i class="ri-palette-line"></i> Choose SDK Theme Style</h3>
+                    <p>Select how you want your chatbot to look and feel</p>
+                </div>
+
+                <div class="theme-options-vertical">
+                    <!-- Default Theme - Top -->
+                    <div class="theme-card" data-theme="default">
+                        <div class="theme-card-preview">
+                            <div class="theme-preview default-theme">
+                                <div class="theme-preview-header">
+                                    <div class="header-title">ChatFlow AI</div>
+                                    <div class="header-close">×</div>
+                                </div>
+                                <div class="theme-preview-content">
+                                    <div class="theme-preview-bubble bot">Hi! How can I help you?</div>
+                                    <div class="theme-preview-bubble user">Hello there!</div>
+                                </div>
+                                <div class="theme-preview-input">
+                                    <div class="input-field">Ask me anything...</div>
+                                    <div class="send-button">→</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme-card-content">
+                            <div class="theme-card-header">
+                                <h4><i class="ri-brush-line"></i> Default Theme</h4>
+                                <div class="theme-badge default">Universal</div>
+                            </div>
+                            <p>Clean, professional design that works perfectly on any website. Uses our signature blue color scheme.</p>
+                            <div class="theme-colors-showcase">
+                                <div style="display: flex; align-items: center; margin-bottom: 4px; font-size: 0.85rem; width: 100%; clear: both;">
+                                    <div class="color-dot" style="background: #667eea; margin-right: 8px; flex-shrink: 0;" title="Primary: #667eea"></div>
+                                    <span style="color: #64748b;"><strong>Primary:</strong> #667eea</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 4px; font-size: 0.85rem; width: 100%; clear: both;">
+                                    <div class="color-dot" style="background: #f1f3f5; margin-right: 8px; flex-shrink: 0;" title="Background: #f1f3f5"></div>
+                                    <span style="color: #64748b;"><strong>Background:</strong> #f1f3f5</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 4px; font-size: 0.85rem; width: 100%; clear: both;">
+                                    <div class="color-dot" style="background: #333333; margin-right: 8px; flex-shrink: 0;" title="Text: #333333"></div>
+                                    <span style="color: #64748b;"><strong>Text:</strong> #333333</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Website Theme - Bottom -->
+                    <div class="theme-card" data-theme="website">
+                        <div class="theme-card-preview">
+                            <div class="theme-preview website-theme" id="website-theme-preview">
+                                <div class="theme-preview-header">
+                                    <div class="header-title">ChatFlow AI</div>
+                                    <div class="header-close">×</div>
+                                </div>
+                                <div class="theme-preview-content">
+                                    <div class="theme-preview-bubble bot">Hi! How can I help you?</div>
+                                    <div class="theme-preview-bubble user">Hello there!</div>
+                                </div>
+                                <div class="theme-preview-input">
+                                    <div class="input-field">Ask me anything...</div>
+                                    <div class="send-button">→</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme-card-content">
+                            <div class="theme-card-header">
+                                <h4><i class="ri-magic-line"></i> Website Theme</h4>
+                                <div class="theme-badge website" id="theme-status-badge">Auto-Match</div>
+                            </div>
+                            <p>Automatically extracts and matches your website's colors, creating a seamless brand experience.</p>
+                            <div class="theme-colors-showcase" id="theme-colors-preview">
+                                <!-- Dynamic colors will be populated by JavaScript -->
+                            </div>
+                            <div class="theme-extraction-status" id="theme-extraction-status">
+                                <span class="status-text">Select a website above to extract theme colors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply Button -->
+                <div class="theme-apply-section">
+                    <button class="theme-apply-btn" id="apply-theme-btn" disabled>
+                        <i class="ri-check-line"></i>
+                        Apply Selected Theme
+                    </button>
+                    <p class="theme-apply-note">Click to generate the SDK code with your selected theme</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SDK Integration Guide Section -->
+    <div class="integration-section">
+        <div class="section-header">
+            <h2><i class="ri-code-s-slash-line"></i> SDK Integration Guide</h2>
+        </div>
+        
+        <div class="integration-guide-area">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Include the SDK Script</h3>
+                    <p>Add the ChatFlow SDK script to your HTML page:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>HTML</span>
+                            <button class="btn btn-icon copy-code" data-target="sdk-script">
+                                <i class="ri-file-copy-line"></i>
+                            </button>
+                        </div>
+                        <pre id="sdk-script"><code>&lt;script src="https://your-domain.com/chatbot-sdk.js" data-api-key="YOUR_API_KEY_HERE"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                    
+                    <div class="integration-note">
+                        <i class="ri-information-line"></i>
+                        <div>
+                            <strong>Note:</strong> The code above will update automatically based on your configuration choices.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Basic HTML Test Page</h3>
+                    <p>Use this basic HTML template to test your SDK integration:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>HTML Test Page</span>
+                            <button class="btn btn-icon copy-code" data-target="test-html">
+                                <i class="ri-file-copy-line"></i>
+                            </button>
+                        </div>
+                        <pre id="test-html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;ChatFlow AI Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to ChatFlow AI Test Page&lt;/h1&gt;
+    &lt;p&gt;This is a test page to verify ChatFlow AI SDK integration.&lt;/p&gt;
+    
+    &lt;!-- ChatFlow AI SDK --&gt;
+    &lt;script src="https://your-domain.com/chatbot-sdk.js" data-api-key="YOUR_API_KEY_HERE"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                    
+                    <div class="integration-note">
+                        <i class="ri-information-line"></i>
+                        <div>
+                            <strong>Usage:</strong> Save this as an HTML file and open it in your browser to test the chatbot.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Test Your Integration</h3>
+                    <p>Once implemented, test your chatbot to ensure it's working correctly.</p>
+                    <div class="test-checklist">
+                        <div class="checklist-item">
+                            <i class="ri-checkbox-circle-line"></i>
+                            <span>Chatbot widget appears on the page</span>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="ri-checkbox-circle-line"></i>
+                            <span>Widget opens when clicked</span>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="ri-checkbox-circle-line"></i>
+                            <span>Messages are sent and received</span>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="ri-checkbox-circle-line"></i>
+                            <span>Responses are relevant and helpful</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Troubleshooting Section -->
+    <div class="integration-section">
+        <div class="section-header">
+            <h2><i class="ri-tools-line"></i> Troubleshooting</h2>
+        </div>
+        
+        <div class="troubleshooting-area">
+            <div class="trouble-item">
+                <div class="trouble-question">
+                    <div class="trouble-question-content">
+                        <div class="trouble-question-icon">
+                            <i class="ri-close-circle-line"></i>
+                        </div>
+                        <div class="trouble-question-text">Chatbot widget doesn't appear</div>
+                    </div>
+                    <i class="ri-arrow-down-s-line trouble-chevron"></i>
+                </div>
+                <div class="trouble-answer">
+                    <ul>
+                        <li>Verify your API key is correct and active in the API Key Management section above</li>
+                        <li>Check browser console (F12) for JavaScript errors or failed network requests</li>
+                        <li>Ensure the SDK script is loaded properly by checking the Network tab in developer tools</li>
+                        <li>Verify your domain is allowed - contact support if you see CORS errors</li>
+                        <li>Try the <strong>Basic HTML Test Page</strong> from the integration guide to isolate the issue</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="trouble-item">
+                <div class="trouble-question">
+                    <div class="trouble-question-content">
+                        <div class="trouble-question-icon">
+                            <i class="ri-shield-cross-line"></i>
+                        </div>
+                        <div class="trouble-question-text">Chatbot shows "Authentication Error"</div>
+                    </div>
+                    <i class="ri-arrow-down-s-line trouble-chevron"></i>
+                </div>
+                <div class="trouble-answer">
+                    <ul>
+                        <li>Regenerate your API key using the <strong>Regenerate Key</strong> button above</li>
+                        <li>Update the <code>data-api-key</code> attribute in your script tag with the new key</li>
+                        <li>Clear browser cache and reload the page (Ctrl+F5 or Cmd+Shift+R)</li>
+                        <li>Ensure there are no extra spaces or characters in your API key</li>
+                        <li>Check that your API key hasn't been revoked or expired</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="trouble-item">
+                <div class="trouble-question">
+                    <div class="trouble-question-content">
+                        <div class="trouble-question-icon">
+                            <i class="ri-message-line"></i>
+                        </div>
+                        <div class="trouble-question-text">Messages not sending or receiving</div>
+                    </div>
+                    <i class="ri-arrow-down-s-line trouble-chevron"></i>
+                </div>
+                <div class="trouble-answer">
+                    <ul>
+                        <li>Check your internet connection and try refreshing the page</li>
+                        <li>Verify the ChatFlow service is operational (check our status page)</li>
+                        <li>Open browser developer tools (F12) and check the Network tab for failed requests</li>
+                        <li>Ensure your API key is still active and hasn't been revoked</li>
+                        <li>Try sending a simple test message like "Hello" to verify basic functionality</li>
+                        <li>Check if you have any ad blockers or firewall rules blocking the requests</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="trouble-item">
+                <div class="trouble-question">
+                    <div class="trouble-question-content">
+                        <div class="trouble-question-icon">
+                            <i class="ri-robot-line"></i>
+                        </div>
+                        <div class="trouble-question-text">Chatbot responses are not relevant or helpful</div>
+                    </div>
+                    <i class="ri-arrow-down-s-line trouble-chevron"></i>
+                </div>
+                <div class="trouble-answer">
+                    <ul>
+                        <li>Ensure you have selected the correct website in the <strong>Website Configuration</strong> section</li>
+                        <li>Verify that the website data was scraped properly from the dashboard</li>
+                        <li>Try asking more specific questions related to the content of your website</li>
+                        <li>Check if the scraped content is comprehensive and up-to-date</li>
+                        <li>Consider re-scraping your website if the content has changed significantly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="trouble-item">
+                <div class="trouble-question">
+                    <div class="trouble-question-content">
+                        <div class="trouble-question-icon">
+                            <i class="ri-smartphone-line"></i>
+                        </div>
+                        <div class="trouble-question-text">Chatbot not working on mobile devices</div>
+                    </div>
+                    <i class="ri-arrow-down-s-line trouble-chevron"></i>
+                </div>
+                <div class="trouble-answer">
+                    <ul>
+                        <li>Ensure your website is mobile-responsive and the chatbot widget isn't hidden</li>
+                        <li>Check if the chatbot widget is positioned correctly on mobile screens</li>
+                        <li>Test on different mobile browsers (Safari, Chrome, Firefox mobile)</li>
+                        <li>Verify there are no JavaScript errors specific to mobile devices</li>
+                        <li>Check if touch events are working properly for opening the chat widget</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Need Help Section -->
+    <div class="integration-section">
+        <div class="section-header">
+            <h2><i class="ri-customer-service-2-line"></i> Need Help?</h2>
+        </div>
+        
+        <div class="support-area">
+            <div class="support-card">
+                <i class="ri-book-open-line"></i>
+                <h3>Documentation</h3>
+                <p>Comprehensive guides and API reference</p>
+                <a href="#" class="btn btn-outline">View Docs</a>
+            </div>
+            
+            <div class="support-card">
+                <i class="ri-question-answer-line"></i>
+                <h3>FAQ</h3>
+                <p>Frequently asked questions and answers</p>
+                <a href="#" class="btn btn-outline">View FAQ</a>
+            </div>
+            
+            <div class="support-card">
+                <i class="ri-mail-line"></i>
+                <h3>Contact Support</h3>
+                <p>Get help from our technical support team</p>
+                <a href="mailto:support@chatflow.ai" class="btn btn-outline">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>
