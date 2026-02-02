@@ -1,8 +1,12 @@
 const getApiBaseUrl = () => {
-    // FORCED DEBUGGING: Hardcoding to localhost:3000
-    const isDev = window.location.port === '8080';
-    console.log(`🔌 ScrapeAPI URL set to: ${isDev ? `http://${window.location.hostname}:3000/api` : '/api'}`);
-    return isDev ? `http://${window.location.hostname}:3000/api` : '/api';
+    // Check if running on localhost
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    // Use Render backend for production, localhost for development
+    const baseUrl = isLocalhost ? 'http://localhost:3000/api' : 'https://chat-backend-12wo.onrender.com/api';
+
+    console.log(`🔌 ScrapeAPI URL set to: ${baseUrl}`);
+    return baseUrl;
 };
 
 const ScrapeAPI = {

@@ -1,11 +1,12 @@
 class AuthManager {
     constructor() {
-        // Use full backend URL for localhost development
-        // FORCED DEBUGGING: Hardcoding to localhost:3000
-        const isDev = window.location.port === '8080';
-        this.apiBase = isDev ? `http://${window.location.hostname}:3000/api/auth` : '/api/auth';
+        // Use full backend URL for localhost development or production
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        // Use Render backend for production, localhost for development
+        this.apiBase = isLocalhost ? 'http://localhost:3000/api/auth' : 'https://chat-backend-12wo.onrender.com/api/auth';
+
         console.log('🔌 API Base set to:', this.apiBase);
-        // alert('Debug: API Base set to ' + this.apiBase);
         this.init();
     }
 
