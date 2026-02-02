@@ -193,9 +193,8 @@ const HeaderComponent = {
 
     async loadUserData() {
         try {
-            // Use production backend URL
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const url = isLocalhost ? 'http://localhost:3000/api/auth/profile' : 'https://chat-backend-12wo.onrender.com/api/auth/profile';
+            // Use local backend IP
+            const url = 'http://192.168.1.12:3000/api/auth/profile';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
@@ -229,9 +228,8 @@ const HeaderComponent = {
 
     async handleLogout() {
         try {
-            // Use production backend URL
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const url = isLocalhost ? 'http://localhost:3000/api/auth/logout' : 'https://chat-backend-12wo.onrender.com/api/auth/logout';
+            // Use local backend IP
+            const url = 'http://192.168.1.12:3000/api/auth/logout';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'

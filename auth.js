@@ -1,10 +1,7 @@
 class AuthManager {
     constructor() {
-        // Use full backend URL for localhost development or production
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-        // Use Render backend for production, localhost for development
-        this.apiBase = isLocalhost ? 'http://localhost:3000/api/auth' : 'https://chat-backend-12wo.onrender.com/api/auth';
+        // Use local backend IP
+        this.apiBase = 'http://192.168.1.12:3000/api/auth';
 
         console.log('🔌 API Base set to:', this.apiBase);
         this.init();

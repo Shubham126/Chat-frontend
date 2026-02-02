@@ -1,9 +1,7 @@
 const getApiBaseUrl = () => {
-    // Check if running on localhost
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-    // Use Render backend for production, localhost for development
-    const baseUrl = isLocalhost ? 'http://localhost:3000/api' : 'https://chat-backend-12wo.onrender.com/api';
+    // Always use local backend IP for now
+    // Change this to your backend URL when deploying to production
+    const baseUrl = 'http://192.168.1.12:3000/api';
 
     console.log(`🔌 ScrapeAPI URL set to: ${baseUrl}`);
     return baseUrl;
