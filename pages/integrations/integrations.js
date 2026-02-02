@@ -9,11 +9,14 @@ const IntegrationsPage = {
             const html = await response.text();
             container.innerHTML = html;
 
-            // Initialize page functionality
-            this.bindEvents();
-            await this.loadApiKey();
-            await this.loadAvailableWebsites();
-            this.loadSavedThemeSelection();
+            // Wait for DOM to be ready before initializing
+            setTimeout(async () => {
+                // Initialize page functionality
+                this.bindEvents();
+                await this.loadApiKey();
+                await this.loadAvailableWebsites();
+                this.loadSavedThemeSelection();
+            }, 50);
 
         } catch (error) {
             console.error('Error loading integrations page:', error);
@@ -443,6 +446,12 @@ const IntegrationsPage = {
         const noKeyEl = document.getElementById('no-api-key');
         const hasKeyEl = document.getElementById('has-api-key');
 
+        // Check if elements exist before accessing them
+        if (!loadingEl || !noKeyEl || !hasKeyEl) {
+            console.warn('API key elements not found in DOM');
+            return;
+        }
+
         // Fade out existing content
         if (noKeyEl.style.display !== 'none') {
             noKeyEl.style.opacity = '0';
@@ -532,12 +541,22 @@ const IntegrationsPage = {
     },
 
     showError(message) {
-        document.getElementById('api-key-loading').style.display = 'none';
-        document.getElementById('no-api-key').style.display = 'none';
-        document.getElementById('has-api-key').style.display = 'none';
+        const loadingEl = document.getElementById('api-key-loading');
+        const noKeyEl = document.getElementById('no-api-key');
+        const hasKeyEl = document.getElementById('has-api-key');
+        const statusDiv = document.getElementById('api-key-status');
+
+        // Check if elements exist
+        if (!loadingEl || !noKeyEl || !hasKeyEl || !statusDiv) {
+            console.error('API key elements not found in DOM');
+            return;
+        }
+
+        loadingEl.style.display = 'none';
+        noKeyEl.style.display = 'none';
+        hasKeyEl.style.display = 'none';
 
         // Show error state
-        const statusDiv = document.getElementById('api-key-status');
         statusDiv.innerHTML = `
             <div class="error-state">
                 <i class="ri-error-warning-line"></i>
