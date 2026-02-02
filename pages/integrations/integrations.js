@@ -197,10 +197,9 @@ const IntegrationsPage = {
         try {
             this.showLoading();
 
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/api-key` : '/api/auth/api-key';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/api-key' : 'https://chat-backend-12wo.onrender.com/api/auth/api-key';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
@@ -229,10 +228,9 @@ const IntegrationsPage = {
         try {
             this.setButtonLoading('generate-api-key-btn', true);
 
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/api-key/generate` : '/api/auth/api-key/generate';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/api-key/generate' : 'https://chat-backend-12wo.onrender.com/api/auth/api-key/generate';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
@@ -264,10 +262,9 @@ const IntegrationsPage = {
         try {
             this.setButtonLoading('regenerate-api-key-btn', true);
 
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/api-key/generate` : '/api/auth/api-key/generate';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/api-key/generate' : 'https://chat-backend-12wo.onrender.com/api/auth/api-key/generate';
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include'
@@ -299,10 +296,9 @@ const IntegrationsPage = {
         try {
             this.setButtonLoading('revoke-api-key-btn', true);
 
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/auth/api-key` : '/api/auth/api-key';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/auth/api-key' : 'https://chat-backend-12wo.onrender.com/api/auth/api-key';
             const response = await fetch(url, {
                 method: 'DELETE',
                 credentials: 'include'
@@ -740,10 +736,9 @@ const IntegrationsPage = {
 
     async loadAvailableWebsites() {
         try {
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            // FORCED DEBUGGING: Hardcoding to localhost:3000
-            const isDev = window.location.port === '8080';
-            const url = isDev ? `http://${window.location.hostname}:3000/api/scrape/dashboard/files` : '/api/scrape/dashboard/files';
+            // Use production backend URL
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const url = isLocalhost ? 'http://localhost:3000/api/scrape/dashboard/files' : 'https://chat-backend-12wo.onrender.com/api/scrape/dashboard/files';
             const response = await fetch(url, {
                 method: 'GET',
                 credentials: 'include'
