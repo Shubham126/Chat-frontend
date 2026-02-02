@@ -75,7 +75,7 @@
     <script src="pages/integrations/integrations.js"></script>
     <script src="pages/configuration/configurationState.js"></script>
     <script src="pages/configuration/configuration.js"></script>
-    <script src="shared/api/scrapeAPI.js"></script>
+    <script src="shared/api/scrapeAPI.js?v=2"></script>
 
     <script>
         // Authentication check and app initialization
@@ -109,10 +109,9 @@
         // Function to check authentication status
         async function checkAuthStatus() {
             try {
-                // Use full backend URL for localhost development
-                // FORCED DEBUGGING: Hardcoding to localhost:3000
-                const isDev = window.location.port === '8080';
-                const apiUrl = isDev ? `http://${window.location.hostname}:3000/api/auth/check` : '/api/auth/check';
+                // Use full backend URL for localhost development or production
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiUrl = isLocalhost ? 'http://localhost:3000/api/auth/check' : 'https://chat-backend-12wo.onrender.com/api/auth/check';
                 console.log('🔌 Auth Check URL set to:', apiUrl);
 
                 const response = await fetch(apiUrl, {

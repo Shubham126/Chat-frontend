@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,8 +214,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .alert {
@@ -318,20 +324,21 @@
             .auth-container {
                 margin: 10px;
             }
-            
+
             .auth-content {
                 padding: 30px 20px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-header">
             <h1>ChatFlow AI</h1>
             <p>Intelligent Website Analysis</p>
         </div>
-        
+
         <div class="auth-content">
             <div class="auth-tabs">
                 <div class="auth-tab active" data-tab="login">Login</div>
@@ -347,18 +354,19 @@
                     <input type="email" id="login-email" name="email" required>
                     <div class="error-message" id="login-email-error"></div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="login-password">Password</label>
                     <div class="password-input-container">
                         <input type="password" id="login-password" name="password" required>
-                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('login-password', this)">
-                             <i class="ri-eye-off-line"></i>
-                         </button>
+                        <button type="button" class="password-toggle"
+                            onclick="togglePasswordVisibility('login-password', this)">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
                     </div>
                     <div class="error-message" id="login-password-error"></div>
                 </div>
-                
+
                 <button type="submit" class="auth-button" id="login-button">
                     <span class="button-text">Sign In</span>
                     <div class="loading">
@@ -375,20 +383,21 @@
                     <input type="text" id="register-name" name="name" required>
                     <div class="error-message" id="register-name-error"></div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="register-email">Email Address</label>
                     <input type="email" id="register-email" name="email" required>
                     <div class="error-message" id="register-email-error"></div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="register-password">Password</label>
                     <div class="password-input-container">
                         <input type="password" id="register-password" name="password" required>
-                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('register-password', this)">
-                             <i class="ri-eye-off-line"></i>
-                         </button>
+                        <button type="button" class="password-toggle"
+                            onclick="togglePasswordVisibility('register-password', this)">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
                     </div>
                     <div class="password-strength" id="password-strength">
                         <div class="strength-label">Password Strength</div>
@@ -402,18 +411,19 @@
                     </div>
                     <div class="error-message" id="register-password-error"></div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="register-confirm-password">Confirm Password</label>
                     <div class="password-input-container">
                         <input type="password" id="register-confirm-password" name="confirmPassword" required>
-                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('register-confirm-password', this)">
-                             <i class="ri-eye-off-line"></i>
-                         </button>
+                        <button type="button" class="password-toggle"
+                            onclick="togglePasswordVisibility('register-confirm-password', this)">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
                     </div>
                     <div class="error-message" id="register-confirm-password-error"></div>
                 </div>
-                
+
                 <button type="submit" class="auth-button" id="register-button">
                     <span class="button-text">Create Account</span>
                     <div class="loading">
@@ -429,7 +439,7 @@
         function togglePasswordVisibility(inputId, button) {
             const input = document.getElementById(inputId);
             const icon = button.querySelector('i');
-            
+
             if (input.type === 'password') {
                 // Password is currently hidden, show it
                 input.type = 'text';
@@ -441,6 +451,7 @@
             }
         }
     </script>
-    <script src="auth.js"></script>
+    <script src="auth.js?v=2"></script>
 </body>
+
 </html>
