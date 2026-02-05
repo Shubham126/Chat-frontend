@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quick Login Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .token {
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔐 Quick Login Test</h1>
+        <p>Test login and verify token storage</p>
+
+        <input type="email" id="email" placeholder="Email" value="test@example.com">
+        <input type="password" id="password" placeholder="Password" value="Test123">
+        <button onclick="testLogin()">Login & Get Token</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            try {
+                resultDiv.className = 'result';
+                resultDiv.innerHTML = 'Logging in...';
+                resultDiv.style.display = 'block';
+
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.token) {
+                    localStorage.setItem('token', data.token);
+
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Login Successful!</strong><br>
+                        <strong>User:</strong> ${data.user.name} (${data.user.email})<br>
+                        <strong>Token saved to localStorage!</strong>
+                        <div class="token">Token: ${data.token.substring(0, 100)}...</div>
+                        <br>
+                        <button onclick="testIntegrations()">Test Integrations API</button>
+                        <button onclick="goToDashboard()">Go to Dashboard</button>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<strong>❌ Login Failed:</strong> ${data.message}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function testIntegrations() {
+            const token = localStorage.getItem('token');
+            const resultDiv = document.getElementById('result');
+
+            try {
+                resultDiv.innerHTML += '<br><br>Testing integrations API...';
+
+                const response = await fetch('http://localhost:3000/api/scrape/dashboard/files', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML += `<br><strong>✅ API Test Successful!</strong><br>Found ${data.data.length} websites`;
+                } else {
+                    resultDiv.innerHTML += `<br><strong>❌ API Test Failed:</strong> ${data.message}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML += `<br><strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+
+</html>

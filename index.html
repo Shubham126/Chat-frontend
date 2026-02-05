@@ -109,8 +109,11 @@
         // Function to check authentication status
         async function checkAuthStatus() {
             try {
-                // Use Render backend
-                const apiUrl = 'https://chat-backend-12wo.onrender.com/api/auth/check';
+                // Use local backend when on localhost, otherwise use Render
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.1.11'
+                    ? 'http://localhost:3000/api/auth/check'
+                    : 'https://chat-backend-12wo.onrender.com/api/auth/check';
+
                 console.log('🔌 Auth Check URL set to:', apiUrl);
 
                 const response = await fetch(apiUrl, {

@@ -1,7 +1,9 @@
 class AuthManager {
     constructor() {
-        // Use Render backend
-        this.apiBase = 'https://chat-backend-12wo.onrender.com/api/auth';
+        // Use local backend when on localhost, otherwise use Render
+        this.apiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.1.11'
+            ? 'http://localhost:3000/api/auth'
+            : 'https://chat-backend-12wo.onrender.com/api/auth';
 
         console.log('🔌 API Base set to:', this.apiBase);
         this.init();
@@ -115,6 +117,11 @@ class AuthManager {
             const result = await response.json();
 
             if (result.success) {
+                // Store token in localStorage for other pages
+                if (result.token) {
+                    localStorage.setItem('token', result.token);
+                }
+
                 this.showAlert('Login successful! Redirecting...', 'success');
                 setTimeout(() => {
                     window.location.href = '/';
@@ -162,6 +169,11 @@ class AuthManager {
             const result = await response.json();
 
             if (result.success) {
+                // Store token in localStorage for other pages
+                if (result.token) {
+                    localStorage.setItem('token', result.token);
+                }
+
                 this.showAlert('Account created successfully! Redirecting...', 'success');
                 setTimeout(() => {
                     window.location.href = '/';
