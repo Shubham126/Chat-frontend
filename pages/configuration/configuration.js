@@ -8,10 +8,10 @@ const ConfigurationPage = {
         const response = await fetch('pages/configuration/configuration.html');
         const html = await response.text();
 
-        // Insert into main content
-        const mainContent = document.getElementById('main-content');
-        if (mainContent) {
-            mainContent.innerHTML = html;
+        // Insert into configuration page container (not main-content)
+        const configPage = document.getElementById('configuration-page');
+        if (configPage) {
+            configPage.innerHTML = html;
         }
 
         // Bind events
