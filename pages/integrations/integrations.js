@@ -267,15 +267,15 @@ const IntegrationsPage = {
         const codeBlock = codeElement.querySelector('code');
         if (!codeBlock) return;
 
-        const sdkUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.1.11'
-            ? 'http://localhost:8080/chatbot-sdk.js'
-            : 'https://chat-sdk.netlify.app/chatbot-sdk.min.js';
+        const sdkUrl = 'https://chat-fn.netlify.app/chatbot-sdk.js';
 
         const integrationCode = `<!-- ChatFlow AI Chatbot for ${website.displayName || website.title} -->
-<script 
-  src="${sdkUrl}" 
-  data-api-key="${apiKey}">
-</script>`;
+<script>
+    const API_KEY = '${apiKey}';
+    const BACKEND_URL = 'https://chat-backend-12wo.onrender.com';
+    const WEBSITE_URL = '${website.url}';
+</script>
+<script src="${sdkUrl}"></script>`;
 
         codeBlock.textContent = integrationCode;
         modal.style.display = 'flex';

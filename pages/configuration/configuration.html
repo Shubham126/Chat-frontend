@@ -109,6 +109,23 @@
             <h2>SDK Integration Guide</h2>
         </div>
 
+        <!-- Website Selection -->
+        <div class="website-selection-container"
+            style="margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; display: none;"
+            id="config-website-selection">
+            <h3 style="margin-bottom: 0.5rem; font-size: 1rem; color: #1e293b;">Select Website for Integration Code</h3>
+            <p style="margin-bottom: 1rem; color: #64748b; font-size: 0.9rem;">Choose a scraped website to automatically
+                populate your API key and website ID in the code below.</p>
+            <select id="config-website-selector"
+                style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background-color: #f8fafc; outline: none; cursor: pointer;">
+                <option value="">Select a scraped website...</option>
+            </select>
+            <div id="config-website-loading"
+                style="display: none; margin-top: 0.5rem; color: #64748b; font-size: 0.85rem;">
+                <i class="ri-loader-4-line ri-spin"></i> Loading websites...
+            </div>
+        </div>
+
         <!-- Step 1: Include SDK Script -->
         <div class="integration-step">
             <div class="step-number">1</div>
@@ -124,9 +141,12 @@
                         </button>
                     </div>
                     <pre id="sdk-script"><code>&lt;!-- Add this before the closing &lt;/body&gt; tag --&gt;
-&lt;script src="https://chat-fn.netlify.app/chatbot-sdk.js" 
-        data-api-key="YOUR_API_KEY_HERE" 
-        data-preselected-website="YOUR_WEBSITE_ID"&gt;&lt;/script&gt;</code></pre>
+&lt;script&gt;
+    const API_KEY = 'YOUR_API_KEY_HERE';
+    const BACKEND_URL = 'https://chat-backend-12wo.onrender.com';
+    const WEBSITE_URL = 'YOUR_WEBSITE_URL';
+&lt;/script&gt;
+&lt;script src="https://chat-fn.netlify.app/chatbot-sdk.js"&gt;&lt;/script&gt;</code></pre>
                 </div>
             </div>
         </div>
@@ -157,9 +177,12 @@
     &lt;p&gt;This is a test page to verify ChatFlow AI SDK integration.&lt;/p&gt;
     
     &lt;!-- ChatFlow AI SDK --&gt;
-    &lt;script src="https://chat-fn.netlify.app/chatbot-sdk.js" 
-            data-api-key="YOUR_API_KEY_HERE" 
-            data-preselected-website="YOUR_WEBSITE_ID"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        const API_KEY = 'YOUR_API_KEY_HERE';
+        const BACKEND_URL = 'https://chat-backend-12wo.onrender.com';
+        const WEBSITE_URL = 'YOUR_WEBSITE_URL';
+    &lt;/script&gt;
+    &lt;script src="https://chat-fn.netlify.app/chatbot-sdk.js"&gt;&lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
                 </div>
