@@ -1,18 +1,18 @@
 const DashboardPage = {
     async init() {
         const container = document.getElementById('dashboard-page');
-        
+
         try {
             const response = await fetch('pages/dashboard/dashboard.html');
             const html = await response.text();
             container.innerHTML = html;
-            
+
             // Show empty state immediately
             this.showEmptyState();
-            
+
             this.bindEvents();
             this.loadHistory();
-            
+
             // Listen for state changes
             DashboardState.addListener(this.handleStateChange.bind(this));
         } catch (error) {
@@ -119,7 +119,7 @@ const DashboardPage = {
 
         const urlInput = document.getElementById('url-input');
         const scrapeBtn = document.getElementById('scrape-btn');
-        
+
         if (!urlInput || !scrapeBtn) return;
 
         const url = urlInput.value.trim();
@@ -135,16 +135,16 @@ const DashboardPage = {
             scrapeBtn.disabled = true;
             scrapeBtn.classList.add('loading');
             DashboardState.setLoading(true);
-            
+
             const result = await ScrapeAPI.scrapeAndSaveForDashboard(url);
-            
+
             // Remove loading and add success animation
             scrapeBtn.classList.remove('loading');
             scrapeBtn.classList.add('success');
-            
+
             // Just refresh the history list - no need to show results
             await this.loadHistory();
-            
+
             // Clear form
             urlInput.value = '';
 
@@ -158,10 +158,10 @@ const DashboardPage = {
 
         } catch (error) {
             console.error('Scrape error:', error);
-            
+
             // Remove loading state and show error
             scrapeBtn.classList.remove('loading');
-            
+
             DashboardState.setError(error);
         } finally {
             // Ensure loading state is cleared regardless of success or failure
@@ -175,10 +175,10 @@ const DashboardPage = {
         try {
             const result = await ScrapeAPI.getFilesList();
             const historyData = result.data || [];
-            
+
             // Update state immediately with the loaded data
             DashboardState.setHistory(historyData);
-            
+
             // Update UI immediately
             this.updateHistory(historyData);
             this.updateWebsiteSelector(historyData);
@@ -206,35 +206,35 @@ const DashboardPage = {
         try {
             const historyItem = document.querySelector(`[data-id="${id}"]`);
             if (!historyItem) return;
-            
+
             const existingDetails = historyItem.nextElementSibling;
-            
+
             // Check if details are already open for this specific item
             if (existingDetails && existingDetails.classList.contains('item-details')) {
                 // Close the details if they're already open for this item
                 this.closeDetails(id);
                 return;
             }
-            
+
             // Close any other open details first (but not this one)
             this.closeAllDetails(id);
-            
+
             // Prevent multiple API calls by checking if already loading
             const viewBtn = historyItem.querySelector('.view-btn');
             if (viewBtn && viewBtn.classList.contains('loading')) {
                 return;
             }
-            
+
             // Add loading state to button
             if (viewBtn) {
                 viewBtn.classList.add('loading');
                 viewBtn.style.opacity = '0.6';
                 viewBtn.style.pointerEvents = 'none';
             }
-            
+
             try {
-            const result = await ScrapeAPI.getFileContent(id);
-            this.showDetailsBelow(id, result.data);
+                const result = await ScrapeAPI.getFileContent(id);
+                this.showDetailsBelow(id, result.data);
             } finally {
                 // Remove loading state
                 if (viewBtn) {
@@ -243,7 +243,7 @@ const DashboardPage = {
                     viewBtn.style.pointerEvents = '';
                 }
             }
-            
+
         } catch (error) {
             console.error('Error loading file content:', error);
             alert('Failed to load file content');
@@ -256,27 +256,27 @@ const DashboardPage = {
             // Find the associated history item
             const historyItem = detail.previousElementSibling;
             const itemId = historyItem?.getAttribute('data-id');
-            
+
             // Skip if this is the item we want to keep open
             if (exceptId && itemId === exceptId) {
                 return;
             }
-            
+
             // Close this detail
             detail.classList.remove('open');
             if (historyItem) {
                 historyItem.classList.remove('expanded');
-            
-            // Reset eye button appearance
+
+                // Reset eye button appearance
                 const viewBtn = historyItem.querySelector('.view-btn');
-            if (viewBtn) {
-                viewBtn.style.background = '';
-                viewBtn.style.color = '';
-                viewBtn.style.borderColor = '';
-                viewBtn.title = 'View Content';
+                if (viewBtn) {
+                    viewBtn.style.background = '';
+                    viewBtn.style.color = '';
+                    viewBtn.style.borderColor = '';
+                    viewBtn.title = 'View Content';
+                }
             }
-            }
-            
+
             // Remove the detail element after animation
             setTimeout(() => {
                 if (detail.parentNode) {
@@ -298,7 +298,7 @@ const DashboardPage = {
 
         // Add expanded class to the clicked item
         historyItem.classList.add('expanded');
-        
+
         // Update the eye button to show it's active
         const viewBtn = historyItem.querySelector('.view-btn');
         if (viewBtn) {
@@ -311,9 +311,9 @@ const DashboardPage = {
         // Create details element
         const detailsElement = document.createElement('div');
         detailsElement.className = 'item-details';
-        
+
         const scrapingMethodIcon = this.getScrapingMethodIcon(fileData.scrapedData.scrapingMethod);
-        const additionalUrlsSection = fileData.scrapedData.additionalUrls && fileData.scrapedData.additionalUrls.length > 0 
+        const additionalUrlsSection = fileData.scrapedData.additionalUrls && fileData.scrapedData.additionalUrls.length > 0
             ? `
                 <div class="detail-section">
                     <h4><i class="ri-links-line"></i> Additional Sources (${fileData.scrapedData.additionalUrls.length})</h4>
@@ -328,7 +328,7 @@ const DashboardPage = {
                     </div>
                 </div>
             ` : '';
-        
+
         detailsElement.innerHTML = `
             <div class="details-content">
                 <div class="details-body">
@@ -412,11 +412,11 @@ const DashboardPage = {
     closeDetails(itemId) {
         const historyItem = document.querySelector(`[data-id="${itemId}"]`);
         const detailsElement = historyItem?.nextElementSibling;
-        
+
         if (detailsElement && detailsElement.classList.contains('item-details')) {
             detailsElement.classList.remove('open');
             historyItem.classList.remove('expanded');
-            
+
             // Reset the eye button appearance
             const viewBtn = historyItem.querySelector('.view-btn');
             if (viewBtn) {
@@ -425,7 +425,7 @@ const DashboardPage = {
                 viewBtn.style.borderColor = '';
                 viewBtn.title = 'View Content';
             }
-            
+
             setTimeout(() => {
                 detailsElement.remove();
             }, 300);
@@ -454,13 +454,13 @@ const DashboardPage = {
 
         if (scrapeBtn && btnText && btnLoading) {
             scrapeBtn.disabled = isLoading;
-            
+
             if (isLoading) {
                 scrapeBtn.classList.add('loading');
             } else {
                 scrapeBtn.classList.remove('loading');
             }
-            
+
             // Legacy support for direct style changes
             btnText.style.display = isLoading ? 'none' : 'inline';
             btnLoading.style.display = isLoading ? 'inline' : 'none';
@@ -469,17 +469,17 @@ const DashboardPage = {
 
     updateHistory(history) {
         const historyContent = document.getElementById('history-content');
-        
+
         if (!historyContent) return;
 
         // If we have history, show it immediately
         if (history && history.length > 0) {
             historyContent.innerHTML = history.map(item => {
                 const scrapingMethodIcon = this.getScrapingMethodIcon(item.scrapingMethod);
-                const additionalUrlsInfo = item.additionalUrls && item.additionalUrls.length > 0 
-                    ? `<span class="additional-urls"><i class="ri-links-line"></i> +${item.additionalUrls.length} sources</span>` 
+                const additionalUrlsInfo = item.additionalUrls && item.additionalUrls.length > 0
+                    ? `<span class="additional-urls"><i class="ri-links-line"></i> +${item.additionalUrls.length} sources</span>`
                     : '';
-                
+
                 return `
                     <div class="history-item" data-id="${item.id}">
                         <div class="history-info">
@@ -529,9 +529,9 @@ const DashboardPage = {
 
             // Prompt for new name
             const newName = prompt('Enter new name for the file:', currentFile.displayName);
-            
+
             if (newName === null) return; // User cancelled
-            
+
             if (!newName.trim()) {
                 alert('Please enter a valid name');
                 return;
@@ -539,14 +539,14 @@ const DashboardPage = {
 
             // Call API to rename the file
             await ScrapeAPI.renameFile(id, newName.trim());
-            
+
             // Refresh the history to show updated name
             this.loadHistory();
-            
+
             // Also refresh the website selector
             const updatedHistory = DashboardState.data.history;
             this.updateWebsiteSelector(updatedHistory);
-            
+
             this.showSuccessMessage('File renamed successfully!');
         } catch (error) {
             console.error('Error renaming file:', error);
@@ -563,7 +563,7 @@ const DashboardPage = {
 
     formatTime(timestamp) {
         if (!timestamp) return 'Unknown';
-        
+
         const date = new Date(timestamp);
         const now = new Date();
         const diffMs = now - date;
@@ -575,7 +575,7 @@ const DashboardPage = {
         if (diffMins < 60) return `${diffMins}m ago`;
         if (diffHours < 24) return `${diffHours}h ago`;
         if (diffDays < 7) return `${diffDays}d ago`;
-        
+
         return date.toLocaleDateString();
     },
 
@@ -610,7 +610,7 @@ const DashboardPage = {
         files.forEach(file => {
             const option = document.createElement('option');
             option.value = file.id;
-            
+
             // Create a meaningful display name
             let displayName = file.displayName || file.fileName;
             if (file.scrapedData && file.scrapedData.title) {
@@ -619,7 +619,7 @@ const DashboardPage = {
                     displayName = displayName.substring(0, 50) + '...';
                 }
             }
-            
+
             option.textContent = displayName;
             websiteSelector.appendChild(option);
         });
@@ -631,6 +631,7 @@ const DashboardPage = {
         const chatInput = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
         const chatMessages = document.getElementById('chat-messages');
+        const chatHeaderText = document.getElementById('chat-header-text');
 
         this.selectedFileId = fileId;
 
@@ -644,11 +645,14 @@ const DashboardPage = {
                 sendBtn.disabled = false;
             }
 
-            // Clear previous messages and show welcome
             if (chatMessages) {
                 const selectedFile = DashboardState.data.history.find(f => f.id === fileId);
-                const websiteTitle = selectedFile?.scrapedData?.title || 'the selected website';
-                
+                const websiteTitle = selectedFile?.scrapedData?.title || selectedFile?.displayName || 'the selected website';
+
+                if (chatHeaderText) {
+                    chatHeaderText.textContent = `Chat with ${websiteTitle}`;
+                }
+
                 chatMessages.innerHTML = `
                     <div class="welcome-message">
                         <div class="welcome-message-content">
@@ -683,6 +687,10 @@ const DashboardPage = {
                 sendBtn.disabled = true;
             }
 
+            if (chatHeaderText) {
+                chatHeaderText.textContent = 'Chat with Website Content';
+            }
+
             // Reset welcome message
             if (chatMessages) {
                 chatMessages.innerHTML = `
@@ -714,7 +722,7 @@ const DashboardPage = {
 
     async handleChatMessage(event) {
         event.preventDefault();
-        
+
         const chatInput = document.getElementById('chat-input');
         const message = chatInput.value.trim();
 
@@ -725,26 +733,26 @@ const DashboardPage = {
 
         // Add user message to chat
         this.addMessageToChat('user', message);
-        
+
         // Show typing indicator
         this.showTypingIndicator();
 
         try {
             // Send message to API
             const response = await ScrapeAPI.chatWithWebsiteForDashboard(this.selectedFileId, message);
-            
+
             // Remove typing indicator
             this.hideTypingIndicator();
-            
+
             // Add bot response to chat
             this.addMessageToChat('bot', response.data.response);
 
         } catch (error) {
             console.error('Chat error:', error);
-            
+
             // Remove typing indicator
             this.hideTypingIndicator();
-            
+
             // Show error message
             this.addMessageToChat('bot', `Sorry, I encountered an error: ${error.message}. Please try again.`);
         }
@@ -762,7 +770,7 @@ const DashboardPage = {
 
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
-        
+
         const now = new Date();
         const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -780,7 +788,7 @@ const DashboardPage = {
         `;
 
         chatMessages.appendChild(messageDiv);
-        
+
         // Smooth scroll to bottom with a slight delay to ensure content is rendered
         requestAnimationFrame(() => {
             chatMessages.scrollTo({
@@ -795,45 +803,45 @@ const DashboardPage = {
 
         // Clean up any malformed AI responses first
         let formatted = this.cleanupAIResponse(message);
-        
+
         // Process markdown links BEFORE escaping HTML
         formatted = this.processMarkdownLinks(formatted);
-        
+
         // Escape HTML to prevent any malformed content (but preserve our processed links)
         formatted = this.escapeHtmlExceptLinks(formatted);
 
         // Convert line breaks to HTML with proper spacing
         formatted = formatted.replace(/\n\n/g, '</p><p class="ai-paragraph">');
         formatted = formatted.replace(/\n/g, '<br>');
-        
+
         // Process markdown headers (## Header)
         formatted = this.processMarkdownHeaders(formatted);
-        
+
         // Simple bold formatting for **text**
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="ai-bold">$1</strong>');
-        
+
         // Simple italic formatting for *text*
         formatted = formatted.replace(/\*(.*?)\*/g, '<em class="ai-italic">$1</em>');
-        
+
         // Process bullet points
         formatted = this.processBulletPoints(formatted);
-        
+
         // Process numbered lists
         formatted = this.processNumberedLists(formatted);
-        
+
         // Process markdown tables
         formatted = this.processMarkdownTables(formatted);
-        
+
         // Clean up any malformed paragraph tags and ensure proper wrapping
         formatted = formatted.replace(/<\/p><p class="ai-paragraph">\s*<\/p>/g, '</p>');
         formatted = formatted.replace(/^<\/p>/, '');
         formatted = formatted.replace(/<p class="ai-paragraph">\s*$/, '');
-        
+
         // Wrap in paragraph tags if not already wrapped
         if (!formatted.includes('<p class="ai-paragraph">')) {
             formatted = `<p class="ai-paragraph">${formatted}</p>`;
         }
-        
+
         // Format as a clean response with proper spacing
         return `<div class="ai-response">${formatted}</div>`;
     },
@@ -847,7 +855,7 @@ const DashboardPage = {
         // Split by HTML link tags to preserve them
         const linkRegex = /(<a[^>]*>.*?<\/a>)/g;
         const parts = text.split(linkRegex);
-        
+
         return parts.map(part => {
             // If this part is a link, preserve it
             if (linkRegex.test(part)) {
@@ -871,10 +879,10 @@ const DashboardPage = {
         const lines = text.split('<br>');
         let inList = false;
         let result = [];
-        
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
-            
+
             if (line.startsWith('• ') || line.startsWith('- ')) {
                 if (!inList) {
                     result.push('</p><ul class="ai-list"><p class="ai-paragraph">');
@@ -892,11 +900,11 @@ const DashboardPage = {
                 }
             }
         }
-        
+
         if (inList) {
             result.push('</p></ul><p class="ai-paragraph">');
         }
-        
+
         return result.join('<br>');
     },
 
@@ -905,10 +913,10 @@ const DashboardPage = {
         const lines = text.split('<br>');
         let inList = false;
         let result = [];
-        
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
-            
+
             // Check for numbered list pattern (1. 2. etc.)
             if (/^\d+\.\s/.test(line)) {
                 if (!inList) {
@@ -927,11 +935,11 @@ const DashboardPage = {
                 }
             }
         }
-        
+
         if (inList) {
             result.push('</p></ol><p class="ai-paragraph">');
         }
-        
+
         return result.join('<br>');
     },
 
@@ -941,22 +949,22 @@ const DashboardPage = {
         let result = [];
         let inTable = false;
         let tableRows = [];
-        
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
-            
+
             // Check if this line is a table row (contains |)
             if (line.includes('|') && line.split('|').length > 2) {
                 if (!inTable) {
                     inTable = true;
                     tableRows = [];
                 }
-                
+
                 // Skip separator rows (contains --- or ===)
                 if (line.includes('---') || line.includes('===')) {
                     continue;
                 }
-                
+
                 // Process table row
                 const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell);
                 tableRows.push(cells);
@@ -967,27 +975,27 @@ const DashboardPage = {
                     inTable = false;
                     tableRows = [];
                 }
-                
+
                 // Add the non-table line
                 if (line) {
                     result.push(line);
                 }
             }
         }
-        
+
         // Close table if we ended while in one
         if (inTable) {
             result.push(this.renderTable(tableRows));
         }
-        
+
         return result.join('<br>');
     },
 
     renderTable(rows) {
         if (rows.length === 0) return '';
-        
+
         let html = '<table class="ai-table">';
-        
+
         // First row is header
         if (rows.length > 0) {
             html += '<thead><tr>';
@@ -996,7 +1004,7 @@ const DashboardPage = {
             });
             html += '</tr></thead>';
         }
-        
+
         // Remaining rows are body
         if (rows.length > 1) {
             html += '<tbody>';
@@ -1009,7 +1017,7 @@ const DashboardPage = {
             }
             html += '</tbody>';
         }
-        
+
         html += '</table>';
         return html;
     },
@@ -1037,7 +1045,7 @@ const DashboardPage = {
         `;
 
         chatMessages.appendChild(typingDiv);
-        
+
         // Smooth scroll to bottom for typing indicator
         requestAnimationFrame(() => {
             chatMessages.scrollTo({
@@ -1065,14 +1073,14 @@ const DashboardPage = {
                 <i class="ri-checkbox-circle-line"></i> ${message}
             </div>
         `;
-        
+
         document.body.appendChild(notification);
-        
+
         // Show the notification
         setTimeout(() => {
             notification.classList.add('show');
         }, 100);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             notification.classList.remove('show');
@@ -1089,10 +1097,10 @@ const DashboardPage = {
         message = message.replace(/\s*target="_blank"[^>]*>/g, '');
         message = message.replace(/\s*class="ai-link"[^>]*>/g, '');
         message = message.replace(/\s*rel="noopener noreferrer"[^>]*>/g, '');
-        
+
         // Remove any incomplete HTML tags
         message = message.replace(/<[^>]*$/g, '');
-        
+
         return message.trim();
     },
 
